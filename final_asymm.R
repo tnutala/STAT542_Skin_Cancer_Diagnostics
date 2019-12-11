@@ -64,15 +64,3 @@ measureasymm.dir = function(d) {
   })
 }
 
-ben.asym = measureasymm.dir("benign")
-mal.asym = measureasymm.dir("malignant")
-
-y = c(numeric(length(ben.asym)), rep(1, length(mal.asym)))
-x = data.frame(asymmetric = c(ben.asym, mal.asym), malignant = y)
-
-fit = glm(malignant ~ asymmetric, data = x, family = "binomial")
-pred = predict.glm(fit, x, type = "response") > .5
-mean(pred == y)
-
-
-
