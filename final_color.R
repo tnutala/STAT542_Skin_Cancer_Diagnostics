@@ -1,20 +1,33 @@
 library("imager")
 
 intensity = function(img) {
-  mean(as.numeric(grayscale(img)))
+  as.numeric(grayscale(img))
 }
 
 measureintensity = function(imgpath) {
   gc()
   print(imgpath)
   img = load.image(imgpath)
-  intensity(img)
+  mean(intensity(img))
 }
 
 img = load.image(file.path("benign", list.files("benign")[1]))
 measureintensity.dir = function(d) {
   sapply(list.files(d), function(x) {
     measureintensity(file.path(d, x))
+  })
+}
+
+measureintensityvar = function(imgpath) {
+  gc()
+  print(imgpath)
+  img = load.image(imgpath)
+  var(intensity(img))
+}
+
+measureintensityvar.dir = function(d) {
+  sapply(list.files(d), function(x) {
+    measureintensityvar(file.path(d, x))
   })
 }
 
