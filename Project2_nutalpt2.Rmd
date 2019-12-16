@@ -1,0 +1,65 @@
+---
+title: 'Skin Cancer Diagnostics using Computer Vision'
+author: "Fall 2019, by Pulkit Dixit (pulkitd2), Matthew Modaff (mmodaff), Tejo Nutalapati (nutalpt2)"
+date: 'Due: Monday, December 16 by 11:59 PM Pacific Time'
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: 2
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: '2'
+---
+
+
+# Introduction
+
+We set out to detect and classify skin images into two categories: benign and malignant. The first approach we used involved identifying malignant moles in the skin images based on their pixel values. For this we used 3 different classifiers: Naive Bayes, Logistic Regression, and TODO (Linear SVM, Radial SVM, LDA, Random forest)
+Our second approach involved extracting features from the images in order for our models to be more interpretable so that we may convince experts in the medical field of interesting features for identifying malignant moles.
+
+
+
+# Part 1
+
+
+## Data Processing 
+For our first approach using only the image pixels, we normalized the images using min-max normalization, standardized the image sizes to 256 by 256 
+We also tried to remove the hairs, ruler marks, black borders, and anything else in the skin images that was not the melanoma. To do this we used a method outlined in 
+
+## Classification using Pixels
+
+
+# Part 2
+
+## Literature Review
+	Because diagnosing melanomas early increases chances of survival greatly, doctors have developed metrics used for differentiating between malignant and benign moles. Many of these techniques can be applied by patients, and can be checked using visible cues. We can take these techniques and apply them to our data set to give us interpretable features.
+	The techniques follow the mnemonic of ABCDE - Asymmetry, Borders, Color, Diameter or Dark, and Elevated or Evolving.
+	Asymmetry - a mole that is mostly oval or circular is likely benign, while one that is not mostly the same on both sides is more likely to be malignant.
+	Border - If the mole has an irregular border (uneven, notched edges, etc) it is more likely to be malignant.
+	Color - Melanomas can grow spots that are red, blue, or white, or has uneven colors as they grow.
+	Diameter - If the mole is larger than about 6 mm in diameter, it’s more likely to be malignant.
+	Dark - Moles that are darker than others might be a warning sign.
+	Evolving - Moles that change over time are a warning sign.
+	Elevated - Moles that have a surface that is higher than the surrounding skin is more likely to be malignant.
+
+	Of those criteria, a few right off the bat are not useful for classification of images. Elevated is very difficult or impossible to tell from these images. Diameter is also out, as we do not know the scale at which all of these images were taken, or if they were even taken all at the same scale. Evolving also will not work, since we only have a snapshot at one point in time for each example. 
+
+	Based on this criteria, we developed a number of different features for classifying the pictures based on the scores each image has for each feature.
+	
+## Feature Engineering
+	The first feature used is Asymmetry. To measure it, we took each image, padded the image into a square using the average of border pixels, then dropped a circular mask on top of it. Then, at angles of 0 to 90 degrees, incrementing by 5, we rotated the image and then compared the pixel values of the left side to its mirror on the right. We then took the mean squared difference between the red, green, and blue pixel values of the mirrored images for each rotational value, and then took the minimum. That score became our asymmetry feature score.
+	<insert pictures here>
+	The second feature is testing for the irregular border. To do this, we resized each image to a standard size of 256 to 256, then ran opencv’s edge detection algorithm, which spits out an image that has each pixel on or off, depending on if it’s considered a border pixel or not. The score was then just an average of the pixel values in this edge detected image.
+	<insert pictures here>
+	The last features involved analyzing the colors of each of the images. To test for dark/white, each image was converted to grayscale and then each pixel was averaged out to get the score. The standard deviation was also calculated in order to test for spots, rather than just a uniformly light picture. To test for blue, each pixel’s blue channel was subtracted by the red or green channel, whichever was bigger. These values were then averaged out for one feature, and the standard deviation again for another. This process was then repeated for the red channel.
+	<more pictures>
+
+
+## Classification using New Features
+	This then gives a feature set with <X> columns, each of which is interpretable for a doctor, and follows the clinical methods for diagnosing melanomas. We then ran two different classification methods on the data set, random forest and penalized logistic regression. 
+
+	<Talk about results here> (see below)
+
+
+
