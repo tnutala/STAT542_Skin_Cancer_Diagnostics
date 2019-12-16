@@ -251,16 +251,45 @@ x = data.frame(intensity = c(ben.int, mal.int),
 ### Classification
 #
 
+#x = read.csv("data_features.csv")
+
 library(caret)
-set.seed(7)
+library(randomForest)
+set.seed(1)
 inTrain = createDataPartition(y = as.factor(x$malignant), p = .75, list = F)
 training = x[inTrain,]
 testing = x[-inTrain,]
 
 #random forest
 caret.rf.fit = train(as.factor(malignant) ~ ., data = training, method = "rf")
-mean(predict(caret.rf.fit, testing) == testing$malignant)
+rf.pred = predict(caret.rf.fit, testing)
+
+print("Overall accuracy in testing set for Random Forest")
+mean(rf.pred == testing$malignant)
+print("Type I Error")
+mean(rf.pred[testing$malignant == 0] != testing$malignant[testing$malignant == 0])
+print("Type II Error")
+mean(rf.pred[testing$malignant == 1] != testing$malignant[testing$malignant == 1])
+
+print("Important variables")
+rf.vars = importance(caret.rf.fit$finalModel)
+rf.vars[order(rf.vars, decreasing = T),]
+
+print("Tuning parameters")
+caret.rf.fit
+plot(caret.rf.fit$finalModel, main = "Random Forest Error")
 
 #penalized logistic regression
-caret.lasso.fit = train(factor(malignant) ~ ., data = training, method = "glmnet")
-mean(predict(caret.lasso.fit, testing) == testing$malignant)
+caret.log.fit = train(factor(malignant) ~ ., data = training, method = "glmnet")
+log.pred = predict(caret.log.fit, testing)
+
+print("Overall accuracy in testing set for Penalized Logistic Regression")
+mean(log.pred == testing$malignant)
+print("Type I Error")
+mean(log.pred[testing$malignant == 0] != testing$malignant[testing$malignant == 0])
+print("Type II Error")
+mean(log.pred[testing$malignant == 1] != testing$malignant[testing$malignant == 1])
+
+print("Tuning parameters")
+caret.log.fit
+
