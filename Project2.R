@@ -257,6 +257,7 @@ library(caret)
 library(randomForest)
 set.seed(1)
 inTrain = createDataPartition(y = as.factor(x$malignant), p = .75, list = F)
+x[,1:8] = scale(x[,1:8])
 training = x[inTrain,]
 testing = x[-inTrain,]
 
@@ -272,8 +273,9 @@ print("Type II Error")
 mean(rf.pred[testing$malignant == 1] != testing$malignant[testing$malignant == 1])
 
 print("Important variables")
-rf.vars = importance(caret.rf.fit$finalModel)
-rf.vars[order(rf.vars, decreasing = T),]
+#rf.vars = importance(caret.rf.fit$finalModel)
+#rf.vars[order(rf.vars, decreasing = T),]
+varImp(caret.rf.fit)
 
 print("Tuning parameters")
 caret.rf.fit
@@ -293,3 +295,5 @@ mean(log.pred[testing$malignant == 1] != testing$malignant[testing$malignant == 
 print("Tuning parameters")
 caret.log.fit
 
+print("Important variables")
+varImp(caret.log.fit, lambda = caret.log.fit$lambda.min)
