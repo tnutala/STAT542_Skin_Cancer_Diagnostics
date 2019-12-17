@@ -1,3 +1,13 @@
+#######################################
+#######################################
+### READ ME ###
+
+# This R file is intended as a supplement to Part 2, 
+# corresponding to feature extraction and feature-based classification
+
+#######################################
+#######################################
+
 #
 ### Asymmetry Feature
 #
