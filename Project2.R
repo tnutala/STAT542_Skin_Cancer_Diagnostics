@@ -238,12 +238,12 @@ y = numeric(length(list.files("benign")))
 y = c(y, rep(1, length(list.files("malignant"))))
 
 x = data.frame(intensity = c(ben.int, mal.int), 
-               intensitysd = sqrt(c(ben.intvar, mal.intvar)),
+               #intensitysd = sqrt(c(ben.intvar, mal.intvar)),
                asymmetric = c(ben.asym, mal.asym), 
                blue = c(ben.blue, mal.blue), 
                red = c(ben.red, mal.red), 
-               bluesd = sqrt(c(ben.bluevar, mal.bluevar)), 
-               redsd = sqrt(c(ben.redvar, mal.redvar)),
+               #bluesd = sqrt(c(ben.bluevar, mal.bluevar)), 
+               #redsd = sqrt(c(ben.redvar, mal.redvar)),
                edge = c(ben.edge, mal.edge),
                malignant = y)
 
@@ -257,7 +257,7 @@ library(caret)
 library(randomForest)
 set.seed(1)
 inTrain = createDataPartition(y = as.factor(x$malignant), p = .75, list = F)
-x[,1:8] = scale(x[,1:8])
+x[,1:5] = scale(x[,1:5])
 training = x[inTrain,]
 testing = x[-inTrain,]
 
